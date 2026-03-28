@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: otaku_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root123               # senha do root (altere se desejar)
+      MYSQL_DATABASE: otaku_rpg                  # banco criado automaticamente
+      MYSQL_USER: otaku_user                     # usuário adicional
+      MYSQL_PASSWORD: otaku_pass                 # senha do usuário adicional
+      MYSQL_ROOT_HOST: '%'                       # permite conexão remota (se necessário)
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql                # volume para persistência dos dados
+      - ./01_create_tables.sql:/docker-entrypoint-initdb.d/01_create_tables.sql  # script executado na primeira inicialização
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-authentication-plugin=mysql_native_password
+
+volumes:
+  mysql_data:
